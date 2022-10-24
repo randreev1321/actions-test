@@ -1,0 +1,4 @@
+package main
+
+// VERSION is a program version generated using nxs-build-tools
+const VERSION string = "APP_VERSION"
