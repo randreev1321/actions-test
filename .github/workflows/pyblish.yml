@@ -8,7 +8,6 @@ on:
 jobs:
 
   build-and-deploy:
-    needs: [check-and-test]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -49,4 +48,4 @@ jobs:
       if: github.ref_type == 'tag'
       with:
         files: nxs-backup-${{ matrix.TARGET }}
-        prerelease: ${{ contain(github.ref_name, 'rc') }}
+        prerelease: ${{ contains(github.ref_name, 'rc') }}
