@@ -49,3 +49,5 @@ jobs:
       with:
         files: nxs-backup-${{ matrix.TARGET }}
         prerelease: ${{ contains(github.ref_name, 'rc') }}
+        generate_release_notes: true
+        append_body: true
