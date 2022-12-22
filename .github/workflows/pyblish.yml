@@ -36,18 +36,28 @@ jobs:
       run: V=${{ github.ref_name }} && VT="${V#v}" && sed "s@APP_VERSION@$VT@" version.go.in > version.go
 
     - name: Build
-      run: GOOS=linux GOARCH=${{ matrix.TARGET }} go build -v -o nxs-backup-${{ matrix.TARGET }}
+      run: GOOS=linux GOARCH=${{ matrix.TARGET }} go build -v -o file-${{ matrix.TARGET }}
 
+    - name: Compress
+      uses: a7ul/tar-action@v1.1.0
+      id: compress
+      with:
+        command: c
+        files: |
+          ./file-${{ matrix.TARGET }}
+          ./README.md
+        outPath: file-${{ matrix.TARGET }}.tar.gz
+    
     - uses: actions/upload-artifact@v3
       with:
-        name: nxs-backup-${{ matrix.TARGET }}
-        path: nxs-backup-${{ matrix.TARGET }}
+        name: nxs-backup-${{ matrix.TARGET }}.tar.gz
+        path: nxs-backup-${{ matrix.TARGET }}.tar.gz
 
     - uses: softprops/action-gh-release@v1
       name: Upload binaries to release
       if: github.ref_type == 'tag'
       with:
-        files: nxs-backup-${{ matrix.TARGET }}
+        files: nxs-backup-${{ matrix.TARGET }}.tar.gz
         prerelease: ${{ contains(github.ref_name, 'rc') }}
         generate_release_notes: true
         append_body: true
