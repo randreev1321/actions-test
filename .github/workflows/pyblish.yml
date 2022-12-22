@@ -50,14 +50,14 @@ jobs:
     
     - uses: actions/upload-artifact@v3
       with:
-        name: nxs-backup-${{ matrix.TARGET }}.tar.gz
-        path: nxs-backup-${{ matrix.TARGET }}.tar.gz
+        name: file-${{ matrix.TARGET }}.tar.gz
+        path: file-${{ matrix.TARGET }}.tar.gz
 
     - uses: softprops/action-gh-release@v1
       name: Upload binaries to release
       if: github.ref_type == 'tag'
       with:
-        files: nxs-backup-${{ matrix.TARGET }}.tar.gz
+        files: file-${{ matrix.TARGET }}.tar.gz
         prerelease: ${{ contains(github.ref_name, 'rc') }}
         generate_release_notes: true
         append_body: true
