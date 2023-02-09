@@ -98,7 +98,7 @@ jobs:
         args: --best
 
     - name: Compress
-      uses: a7ul/tar-action@v1
+      uses: a7ul/tar-action@v1.1.2
       id: compress
       with:
         command: c
