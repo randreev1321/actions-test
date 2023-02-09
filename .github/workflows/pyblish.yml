@@ -13,6 +13,10 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
+
+      - 
+        name: Set app version
+        run: V=${{ github.ref_name }} && VT="${V#v}" && sed "s@APP_VERSION@$VT@" version.go.in > version.go
       - 
         name: Docker meta
         id: meta
@@ -77,9 +81,9 @@ jobs:
     - uses: actions/setup-go@v3
       name: Set up Go
       with:
-        go-version: 1.18
+        go-version: 1.20
 
-    - name: Set version
+    - name: Set app version
       run: V=${{ github.ref_name }} && VT="${V#v}" && sed "s@APP_VERSION@$VT@" version.go.in > version.go
 
     - name: Build
@@ -94,7 +98,7 @@ jobs:
         args: --best
 
     - name: Compress
-      uses: a7ul/tar-action@v1.1.0
+      uses: a7ul/tar-action@v1
       id: compress
       with:
         command: c
