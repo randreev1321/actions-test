@@ -36,7 +36,49 @@ jobs:
       run: V=${{ github.ref_name }} && VT="${V#v}" && sed "s@APP_VERSION@$VT@" version.go.in > version.go
 
     - name: Build
-      run: GOOS=linux GOARCH=${{ matrix.TARGET }} go build -v -o file-${{ matrix.TARGET }}
+      run: GOOS=linux GOARCH=${{ matrix.TARGET }} go build -ldflags="-s -w" -v -o file
+
+    - name: Run UPX
+      uses: crazy-max/ghaction-upx@v2
+      with:
+        version: latest
+        files: |
+          ./file
+        args: --best
+    
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          randreev/file
+        #  ghcr.io/username/app
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=schedule
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: .docker/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
 
     - name: Compress
       uses: a7ul/tar-action@v1.1.0
@@ -44,7 +86,7 @@ jobs:
       with:
         command: c
         files: |
-          ./file-${{ matrix.TARGET }}
+          ./file
           ./README.md
         outPath: file-${{ matrix.TARGET }}.tar.gz
     
