@@ -28,10 +28,10 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=sha
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-            type=sha
       - 
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
