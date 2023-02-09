@@ -28,6 +28,9 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
             type=sha
       - 
         name: Set up Docker Buildx
@@ -39,7 +42,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - 
+        name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -54,13 +58,14 @@ jobs:
     strategy:
       matrix:
         include:
-        - os: ubuntu-latest
+        - 
+          os: ubuntu-latest
           TARGET: arm
-
-        - os: ubuntu-latest
+        - 
+          os: ubuntu-latest
           TARGET: arm64
-
-        - os: ubuntu-latest
+        - 
+          os: ubuntu-latest
           TARGET: amd64
 
     steps:
