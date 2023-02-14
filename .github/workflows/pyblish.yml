@@ -65,6 +65,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
   build-and-publish-github:
+    needs: build-and-publish-docker
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
