@@ -90,7 +90,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
   build-and-publish-github:
-    needs: build-and-publish-docker
+    needs: [build-and-publish-docker, retag-docker]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
