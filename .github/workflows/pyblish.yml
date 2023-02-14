@@ -87,6 +87,7 @@ jobs:
           src: docker.io/randreev/file:${{ github.sha }}
           dst: |
             ${{ steps.meta.outputs.tags }}
+            docker.io/randreev/file:default
 
   build-and-publish-github:
     runs-on: ${{ matrix.os }}
