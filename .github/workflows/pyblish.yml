@@ -61,7 +61,7 @@ jobs:
         with:
           registry: index.docker.io
           repository: randreev/file
-          target: sha-$("${{ github.sha }}".SubString(0, 8))
+          target: sha-"$("${{ github.sha }}".SubString(0, 8))"
           tags: ${{ steps.meta.outputs.tags }}
 
   build-and-publish-github:
