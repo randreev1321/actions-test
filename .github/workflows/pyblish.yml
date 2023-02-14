@@ -13,7 +13,6 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
-
       - 
         name: Set app version
         run: V=${{ github.ref_name }} && VT="${V#v}" && sed "s@APP_VERSION@$VT@" version.go.in > version.go
@@ -45,17 +44,25 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - 
         name: Build and push
         uses: docker/build-push-action@v4
+        if: ${{ contains(github.ref_name, 'rc') }}
         with:
           context: .
           file: .docker/Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v8
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      -
+        name: Tag image in registry
+        uses: shrink/actions-docker-registry-tag@v3
+        if: ${{ !contains(github.ref_name, 'rc') }}
+        with:
+          registry: index.docker.io
+          repository: randreev/file
+          target: sha-${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
 
   build-and-publish-github:
     runs-on: ${{ matrix.os }}
