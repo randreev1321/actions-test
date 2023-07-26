@@ -110,4 +110,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+        env:
+          VERSION: ${{ github.ref_name }}
   
