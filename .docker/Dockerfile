@@ -1,20 +1,14 @@
-FROM golang:alpine AS builder
+FROM alpine AS builder
 
-LABEL stage=gobuilder
-
-ENV CGO_ENABLED 0
-
-RUN apk update --no-cache && apk add --no-cache upx
-
-WORKDIR /build
-
-ADD .. .
-RUN go mod download
-RUN go build -ldflags="-s -w" -o /app/file-go . && upx -9 -o /app/file /app/file-go
-RUN set -e && apk --print-arch
+RUN case "$(apk --print-arch)" in \
+      x86_64) export ARCH='amd64' ;; \
+      aarch64) export ARCH='arm64' ;; \
+      armv7) export ARCH='arm' ;; \
+    esac; \
+    wget -O /tmp/file.tgz https://github.com/randreev1321/actions-test/releases/download/$VERSION/file-$ARCH.tar.gz; \
+    tar xf /tmp/file.tgz
 
 
 FROM scratch
 
-WORKDIR /app
-COPY --from=builder /app/file /file
+COPY --from=builder /file /file
