@@ -11,6 +11,7 @@ WORKDIR /build
 ADD .. .
 RUN go mod download
 RUN go build -ldflags="-s -w" -o /app/file-go . && upx -9 -o /app/file /app/file-go
+RUN set -e && apk --print-arch
 
 
 FROM scratch
