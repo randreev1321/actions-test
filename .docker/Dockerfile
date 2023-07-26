@@ -6,7 +6,7 @@ RUN set -e; case "$(apk --print-arch)" in \
       armv7) export ARCH='arm' ;; \
     esac; \
     echo $ARCH; \
-    wget -O /tmp/file.tgz https://github.com/randreev1321/actions-test/releases/download/$VERSION/file-$ARCH.tar.gz; \
+    wget -O /tmp/file.tgz "https://github.com/randreev1321/actions-test/releases/download/$VERSION/file-$ARCH.tar.gz"; \
     tar xf /tmp/file.tgz
 
 
