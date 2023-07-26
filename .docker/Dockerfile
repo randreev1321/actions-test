@@ -1,5 +1,7 @@
 FROM alpine AS builder
 
+ARG VERSION
+
 RUN set -e; case "$(apk --print-arch)" in \
       x86_64) export ARCH='amd64' ;; \
       aarch64) export ARCH='arm64' ;; \
