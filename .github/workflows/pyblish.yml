@@ -80,7 +80,7 @@ jobs:
       - 
         name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -89,7 +89,25 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
+            type=semver,pattern={{version}},suffix=-debian
             type=sha,prefix=,format=long
+            debian
+      - 
+        name: Docker meta
+        id: meta-alpine
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            randreev/file
+          #  ghcr.io/username/app
+          # generate Docker tags based on the following events/attributes
+          flavor: |
+            latest=false
+          tags: |
+            type=semver,pattern={{version}},suffix=-alpine
+            type=sha,prefix=,format=long
+            alpine
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
